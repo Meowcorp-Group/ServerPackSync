@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# Modpack Host [CF|MR]
-MODPACK_HOST="$1"
 # Modpack ID
-MODPACK_PID="$2"
-# Modpack Version ID / File ID
-MODPACK_FID="$3"
+# Format: <Modpack Host>:<Modpack ID>
+# Example: CF:520914
+MODPACK_ID="$1"
 
 # debug
 echo $@
@@ -25,6 +23,12 @@ fi
 
 cd "$MODPACK_DIR"
 
+# Fetch server pack index
+# REMOTE="https://raw.githubusercontent.com/Meowcorp-Group/ServerPackSync/main/db/serverpacks.sh"
+REMOTE="$HOME/Projects/ServerPackSync/db/serverpacks.sh"
+INDEX=$(curl -sSL $REMOTE)
+
+echo "$INDEX"
 
 # debug
 exit 69420

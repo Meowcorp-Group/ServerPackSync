@@ -1,0 +1,20 @@
+{
+	"CF:520914": {
+		"name": "All the Mods 8 - ATM8",
+		"extraMods": [
+			{
+				"name": "Emojiful",
+				"host": "CurseForge",
+				"projectID": "284324",
+				"fileID": "4326651"
+
+			},
+			{
+				"name": "Forbidden and Arcanus",
+				"host": "CurseForge",
+				"projectID": "309858",
+				"fileID": "4182880"
+			}
+		]
+	}
+}
