@@ -5,6 +5,7 @@ server pack sync written in bash and powershell
 ### Linux/macOS
 #### Requirements:
 * curl
+* jq
 ### Windows
 #### Requirements:
 * PowerShell (Windows 10 or later)

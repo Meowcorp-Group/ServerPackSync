@@ -6,9 +6,7 @@
 MODPACK_ID="$1"
 
 # debug
-echo $@
 cd "$INST_DIR"
-echo $(ls -l)
 
 # Find the modpack directory
 # Some modpacks use `minecraft` and some use `.minecraft`
@@ -25,10 +23,10 @@ cd "$MODPACK_DIR"
 
 # Fetch server pack index
 # REMOTE="https://raw.githubusercontent.com/Meowcorp-Group/ServerPackSync/main/db/serverpacks.sh"
-REMOTE="$HOME/Projects/ServerPackSync/db/serverpacks.sh"
+REMOTE="file://$HOME/Projects/ServerPackSync/db/serverpacks.json"
 INDEX=$(curl -sSL $REMOTE)
 
-echo "$INDEX"
+MODS=$(echo "$INDEX" | jq -r ".[\"${MODPACK_ID}\"].extraMods")
 
 # debug
-exit 69420
+exit 255
