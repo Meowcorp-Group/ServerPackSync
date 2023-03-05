@@ -13,7 +13,7 @@ REMOTE="file://$HOME/Projects/ServerPackSync/db/serverpacks.json"
 INDEX=$(curl -sSL $REMOTE)
 
 MODS=$(echo "$INDEX" | jq -r ".[\"${MODPACK_ID}\"].extraMods")
-echo "$MODS"
+# echo "$MODS"
 
 # debug
 exit 255
