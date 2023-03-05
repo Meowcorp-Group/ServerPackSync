@@ -5,6 +5,7 @@
 			{
 				"name": "Emojiful",
 				"host": "CurseForge",
+				"fileName": "Emojiful-Forge-1.19.2-4.0.4-all.jar",
 				"projectID": "284324",
 				"fileID": "4326651"
 
@@ -12,8 +13,9 @@
 			{
 				"name": "Forbidden and Arcanus",
 				"host": "CurseForge",
+				"fileName": "forbidden_arcanus-1.19.2-2.1.1.jar",
 				"projectID": "309858",
-				"fileID": "4182880"
+				"fileID": "4421439"
 			}
 		]
 	}
