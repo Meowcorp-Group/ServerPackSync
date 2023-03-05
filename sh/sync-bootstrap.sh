@@ -1,36 +1,43 @@
 #!/usr/bin/env bash
+# ServerPackSync bootstrap
+
+if [ $SYNC_DEBUG = "true" ]; then
+	echo -e "\033[1;33mDebug mode enabled\033[0m" >&2
+	remote_ver_url="http://127.0.0.1:7171/db/sync.json"
+	remote="http://http://127.0.0.1:7171/sh/sync.sh"
+else
+	remote_ver_url="https://raw.githubusercontent.com/Meowcorp-Group/ServerPackSync/main/db/sync.json"
+	remote="https://raw.githubusercontent.com/Meowcorp-Group/ServerPackSync/main/sh/sync.sh"
+fi
 
 tover() {
-	version="$1"
-	echo "${version:0:1}.${version:1:1}.${version:2:1}"
+    version="$1"
+    echo "${version:0:1}.${version:1:1}.${version:2:1}"
 }
 
-# REMOTE_VER_URL="https://raw.githubusercontent.com/Meowcorp-Group/ServerPackSync/main/db/version.txt"
-REMOTE_VER_URL="file://$HOME/Projects/ServerPackSync/db/sync.json"
+# Get remote version number
+remote_ver=$(curl -sSL "$remote_ver_url" | jq -r ".version")
 
-# REMOTE="https://raw.githubusercontent.com/Meowcorp-Group/ServerPackSync/main/sh/sync.sh"
-REMOTE="file://$HOME/Projects/ServerPackSync/sh/sync.sh"
-
-REMOTE_VER=$(curl -sSL $REMOTE_VER_URL | jq -r ".version")
-
+# Check if sync.json file exists and has a version number
 if [ -f "$INST_MC_DIR/sync.json" ] && cat "$INST_MC_DIR/sync.json" | jq 'has("version")' >/dev/null 2>&1; then
-	LOCAL_VER=$(cat "$INST_MC_DIR/sync.json" | jq -r ".version")
+    local_ver=$(cat "$INST_MC_DIR/sync.json" | jq -r ".version")
 else
-	echo "No sync.json found, creating one..."
-	LOCAL_VER=0
-	# echo '{}' | jq ".version = \"$LOCAL_VER\"" >"$INST_MC_DIR/sync.json"
-	echo '{}' | jq ".version = 0" >"$INST_MC_DIR/sync.json"
+    echo "No sync.json found, creating one..."
+    local_ver=0
+    echo '{}' | jq ".version = 0" >"$INST_MC_DIR/sync.json"
 fi
 
-if [ "$LOCAL_VER" != "$REMOTE_VER" ]; then
-	echo "A new version is available: $REMOTE_VER"
-	echo "Updating..."
-	LOCAL_VER=$REMOTE_VER
-	curl -#SL $REMOTE -o "$INST_MC_DIR/sync.sh"
-	SYNC_JSON=$(cat "$INST_MC_DIR/sync.json")
-	echo "$SYNC_JSON" | jq ".version = \"$REMOTE_VER\" | .version |= tonumber" >"$INST_MC_DIR/sync.json"
+# Update sync.json and sync.sh files if remote version is newer
+if [ "$local_ver" != "$remote_ver" ]; then
+    echo "A new version is available: $remote_ver"
+    echo "Updating..."
+    local_ver=$remote_ver
+    curl -#SL "$remote" -o "$INST_MC_DIR/sync.sh"
+    sync_json=$(cat "$INST_MC_DIR/sync.json")
+    echo "$sync_json" | jq ".version = \"$remote_ver\" | .version |= tonumber" >"$INST_MC_DIR/sync.json"
 fi
 
-echo "ServerPackSync $(tover "$LOCAL_VER")"
+echo "ServerPackSync $(tover "$local_ver")"
 
-bash "$INST_MC_DIR/sync.sh" "$@"
+# Run the sync.sh script with arguments
+bash -e "$INST_MC_DIR/sync.sh" "$@"
